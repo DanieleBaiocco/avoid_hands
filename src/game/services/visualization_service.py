@@ -1,6 +1,6 @@
 import pygame
 
-from paths import ASSETS_DIR
+from src.game.utils.paths import ASSETS_DIR
 
 
 class VisualizationService:

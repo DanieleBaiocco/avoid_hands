@@ -2,11 +2,11 @@ import random
 
 import pygame
 
-from src.components.hand_side import HandSide
-from src.components.scoreboard import Scoreboard
-from src.config import Config
-from src.services.visualization_service import VisualizationService
-from src.utils.tools import sine
+from src.game.components.hand_side import HandSide
+from src.game.components.scoreboard import Scoreboard
+from src.game.utils.config import Config
+from src.game.services.visualization_service import VisualizationService
+from src.game.utils.tools import sine
 
 
 class Hand(pygame.sprite.Sprite):

@@ -1,6 +1,6 @@
-from src.config import Config
-from src.services.visualization_service import VisualizationService
-from src.utils.tools import sine
+from src.game.utils.config import Config
+from src.game.services.visualization_service import VisualizationService
+from src.game.utils.tools import sine
 
 
 class Scoreboard:

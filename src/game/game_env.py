@@ -1,21 +1,20 @@
-import time
 from typing import Optional, Union, List
 
 import gym
 import numpy as np
 import pygame
-from gym.core import RenderFrame, ActType
+from PIL import Image
+from gym.core import RenderFrame
 from gym.spaces import Discrete, Box
 from pygame.locals import *
-from pygame.time import Clock
-from PIL import Image
-from src.components.hand import Hand
-from src.components.hand_side import HandSide
-from src.components.player import Player
-from src.components.scoreboard import Scoreboard
-from src.config import Config
-from src.services.visualization_service import VisualizationService
-from src.utils.tools import update_background_using_scroll
+
+from src.game.components.hand import Hand
+from src.game.components.hand_side import HandSide
+from src.game.components.player import Player
+from src.game.components.scoreboard import Scoreboard
+from src.game.utils.config import Config
+from src.game.services.visualization_service import VisualizationService
+from src.game.utils.tools import update_background_using_scroll
 
 
 class GameEnv(gym.Env):
@@ -26,7 +25,7 @@ class GameEnv(gym.Env):
         self.observation_space = Box(0, 255, self.window_size)
 
         self.action_space = Discrete(5)
-        self.actions = {'no_op': -1, 'left': K_LEFT, 'right': K_RIGHT, 'up': K_UP, 'down': K_DOWN}
+        self.actions = {0: -1, 1: K_LEFT, 2: K_RIGHT, 3: K_UP, 4: K_DOWN}
         assert render_mode is None or render_mode in self.metadata["render_modes"]
         self.render_mode = render_mode
 
@@ -60,7 +59,7 @@ class GameEnv(gym.Env):
         self.H1.reset()
         self.H2.reset()
 
-    def _update_components(self, action):
+    def _update_components(self, action: int):
         self.P1.update(self.actions[action])
         rw1 = self.H1.move(self.scoreboard, self.P1.player_position)
         rw2 = self.H2.move(self.scoreboard, self.P1.player_position)
@@ -88,13 +87,13 @@ class GameEnv(gym.Env):
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
         self._reset_variables()
-        self._update_components('no_op')
+        self._update_components(0)
         self._draw_components()
         observation = self._get_observation()
         info = self._get_info()
         return observation, info
 
-    def step(self, action: str):
+    def step(self, action: int):
         self.clock += 1
         reward = self._update_components(action)
         self._draw_components()
