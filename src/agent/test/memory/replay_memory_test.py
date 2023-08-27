@@ -10,8 +10,9 @@ from src.game.game_env import GameEnv
 
 class ReplayMemoryTest(unittest.TestCase):
     def test_populate_memory(self):
-        game_env = GameEnv()
-        game_env_wrapper = GameEnvWrapper(game_env)
+        game_env_wrapper = GameEnvWrapper(epsilon_start=0.9,
+                                          epsilon_end=0.15,
+                                          epsilon_decay_steps=10000)
         replay_memory = ReplayMemory(game_env_wrapper, n_init_episodes=2, n_max_episodes=7)
         replay_memory.populate_memory()
         for k, episode in enumerate(replay_memory.memory):
@@ -28,16 +29,17 @@ class ReplayMemoryTest(unittest.TestCase):
         self.assertTrue(replay_memory.n_init_episodes == len(replay_memory.memory) - 1)
 
     def test_take_a_step(self):
-        game_env = GameEnv()
         n_max_episodes = 2
         n_init_episodes = 2
-        game_env_wrapper = GameEnvWrapper(game_env)
+        game_env_wrapper = GameEnvWrapper(epsilon_start=0.9,
+                                          epsilon_end=0.15,
+                                          epsilon_decay_steps=10000)
         replay_memory = ReplayMemory(game_env_wrapper, n_init_episodes=n_init_episodes, n_max_episodes=n_max_episodes)
         replay_memory.populate_memory()
         init_state: State = game_env_wrapper.reset()
 
-        for _ in itertools.count():
-            next_state = replay_memory.take_a_step(init_state, 1)
+        for i in itertools.count():
+            next_state, _ = replay_memory.take_a_step(state=init_state, current_timestep=i)
             if not replay_memory.memory[-1]:
                 break
             init_state = copy.deepcopy(next_state)

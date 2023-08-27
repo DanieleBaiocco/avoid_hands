@@ -8,9 +8,12 @@ from pygame.locals import K_LEFT, K_UP, K_DOWN, K_RIGHT
 
 class PolicyTest(unittest.TestCase):
     def test_epsilon_greedy_action_selection(self):
-        game_env = GameEnv()
-        game_env_wrapper = GameEnvWrapper(game_env)
-        policy = Policy(game_env.actions)
+        game_env_wrapper = GameEnvWrapper(epsilon_start=0.9,
+                                          epsilon_end=0.15,
+                                          epsilon_decay_steps=10000)
+        policy = Policy(game_env_wrapper.actions, epsilon_start=0.9,
+                        epsilon_end=0.15,
+                        epsilon_decay_steps=10000)
         time_step = 0
         state = game_env_wrapper.reset()
         action_to_take = policy.epsilon_greedy_action_selection(state, time_step)
@@ -18,7 +21,9 @@ class PolicyTest(unittest.TestCase):
 
     def test_epsilon_greedy_policy(self):
         game_env = GameEnv()
-        policy = Policy(game_env.actions)
+        policy = Policy(game_env.actions, epsilon_start=0.9,
+                        epsilon_end=0.15,
+                        epsilon_decay_steps=10000)
         action_to_take = policy.uniform_action_selection()
         self.assertTrue(action_to_take in [0, 1, 2, 3, 4])
 

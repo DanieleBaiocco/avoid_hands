@@ -10,17 +10,18 @@ from src.agent.main.environment.state import State
 class ReplayMemory:
     def __init__(self,
                  game_env: GameEnvWrapper,
-                 n_max_episodes=1000000,
-                 n_init_episodes=50000):
+                 n_max_episodes,
+                 n_init_episodes):
         self.n_max_episodes = n_max_episodes
         self.n_init_episodes = n_init_episodes
         self.memory = []
         self.game_env = game_env
+
     def populate_memory(self):
         current_episode_steps = []
         current_state = self.game_env.reset()
         for _ in itertools.count():
-            sample, terminated, info = self.game_env.step(current_state, uniform=True)
+            sample, terminated, info = self.game_env.step(state=current_state, uniform=True)
             current_episode_steps.append((sample, terminated))
             if terminated:
                 self.memory.append(copy.deepcopy(current_episode_steps))
@@ -33,14 +34,13 @@ class ReplayMemory:
                 current_state = copy.deepcopy(next_state)
         self.memory.append([])
 
-
     def take_a_step(self, state: State, current_timestep):
-        sample, terminated, info = self.game_env.step(state, current_timestep)
+        sample, terminated, info = self.game_env.step(state=state, current_time_step=current_timestep)
         self.memory[-1].append((sample, terminated))
         if terminated:
             if len(self.memory) > self.n_max_episodes:
                 self.memory.pop(0)
             self.memory.append([])
-            return self.game_env.reset()
+            return self.game_env.reset(), True
         _, _, _, next_state = sample
-        return copy.deepcopy(next_state)
+        return copy.deepcopy(next_state), False
