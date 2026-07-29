@@ -1,0 +1,7 @@
+tensorflow>=2.12
+gymnasium>=0.29
+pygame>=2.1
+moviepy>=1.0
+imageio-ffmpeg>=0.4
+matplotlib>=3.6
+numpy>=1.23

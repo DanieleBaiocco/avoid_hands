@@ -1,0 +1,21 @@
+{
+  "algorithm": "dqn",
+  "checkpoint_kind": "latest",
+  "episode": 1000,
+  "timestep": 206910,
+  "frame_height": 220,
+  "frame_width": 110,
+  "stack_size": 4,
+  "action_repeat": 2,
+  "preprocessing": "grayscale_bilinear_uint8",
+  "network": "conv32-64-64_stride2_dense512_no_bn_dropout0",
+  "gamma": 0.99,
+  "learning_rate": 1e-05,
+  "target_update_strategy": "soft_polyak_after_gradient_step",
+  "target_soft_tau": 0.0005,
+  "bc_aux_loss": "sparse_categorical_crossentropy_on_demo_samples",
+  "bc_aux_loss_weight_start": 0.5,
+  "bc_aux_loss_weight_end": 0.3,
+  "bc_aux_loss_decay_steps": 200000,
+  "bc_aux_exclude_pre_terminal": 18
+}
